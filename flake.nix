@@ -21,11 +21,11 @@
 	in {
 		devShell = pkgs.mkShell {
 			packages = (with pkgs; [
-				tmux
+				tmux-configured
 			]);
-            shellHook = ''
-                tmux -L a
-            '';
+            #shellHook = ''
+            #    tmux -L a
+            #'';
 		};
 	});
 }

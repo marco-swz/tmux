@@ -1,11 +1,29 @@
 final: prev: {
-    tmux = prev.tmux.overrideAttrs (_: {
-        enable = true;
-        extraConfig = ''
-            set -g status-position top
+    tmux-configured = prev.stdenv.mkDerivation {
+        name = "tmux-configured";
+
+        src = ./.;
+
+        buildInputs = [
+            prev.tmux
+        ];
+
+        installPhase = ''
+            mkdir -p $out
+            cp -rv . $out/
         '';
 
-            #source-file ${./tmux.conf}
-        #extraConfig = builtins.readFile ./tmux.conf;
-    });
+        propagatedBuildInputs = [
+            prev.tmux
+        ];
+
+        setupHook = ./export.sh;
+
+        #TMUX_TEST = "test";
+
+        shellHook = ''
+            export TMUX_TEST="tmux -f $out/tmux.conf"
+            alias tmux="tmux -f $out/tmux.conf"
+        '';
+    };
 }
