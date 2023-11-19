@@ -1,12 +1,8 @@
 final: prev: {
-    tmux-configured = prev.stdenv.mkDerivation {
+    tmux-config = prev.stdenv.mkDerivation {
         name = "tmux-configured";
 
         src = ./.;
-
-        buildInputs = [
-            prev.tmux
-        ];
 
         installPhase = ''
             mkdir -p $out
@@ -17,13 +13,27 @@ final: prev: {
             prev.tmux
         ];
 
-        setupHook = ./export.sh;
+        #setupHook = ./export.sh;
 
-        #TMUX_TEST = "test";
 
-        shellHook = ''
-            export TMUX_TEST="tmux -f $out/tmux.conf"
-            alias tmux="tmux -f $out/tmux.conf"
+        #shellHook = ''
+            #export TMUX_TEST="tmux -f $out/tmux.conf"
+            #alias tmux="tmux -f $out/tmux.conf"
+        #'';
+    };
+
+    tmux-configured = final.stdenv.mkDerivation {
+        name = "testing";
+
+        src = ./.;
+
+        installPhase = ''
+            mkdir -p $out
         '';
+
+        buildInputs = [
+            (final.writeShellScriptBin "test" "echo ${final.tmux-config}")
+        ];
+
     };
 }

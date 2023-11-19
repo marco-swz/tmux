@@ -23,9 +23,10 @@
 			packages = (with pkgs; [
 				tmux-configured
 			]);
-            #shellHook = ''
-            #    tmux -L a
-            #'';
+            shellHook = ''
+                export TCONF="${pkgs.tmux-configured}"
+                alias tmux="tmux -f ${pkgs.tmux-configured}/tmux.conf"
+            '';
 		};
 	});
 }
