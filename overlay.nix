@@ -8,22 +8,15 @@ final: prev: {
             mkdir -p $out
             cp -rv . $out/
         '';
-
-        propagatedBuildInputs = [
-            prev.tmux
-        ];
-
-        #setupHook = ./export.sh;
-
-
-        #shellHook = ''
-            #export TMUX_TEST="tmux -f $out/tmux.conf"
-            #alias tmux="tmux -f $out/tmux.conf"
-        #'';
     };
 
-    tmux-configured = final.stdenv.mkDerivation {
-        name = "testing";
+    tmux-configured = let 
+
+        tmux-script = final.writeShellScriptBin "tmux" "${prev.tmux}/bin/tmux -f ${final.tmux-config}/tmux.conf";
+
+    in final.stdenv.mkDerivation {
+
+        name = "ftest";
 
         src = ./.;
 
@@ -31,9 +24,12 @@ final: prev: {
             mkdir -p $out
         '';
 
-        buildInputs = [
-            (final.writeShellScriptBin "test" "echo ${final.tmux-config}")
+        propagatedBuildInputs = [
+            tmux-script
         ];
 
+        buildInputs = [
+            prev.tmux
+        ];
     };
 }
