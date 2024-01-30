@@ -19,14 +19,12 @@
 	};
 
 	in {
+        packages.default = pkgs.tmuxc;
+
 		devShell = pkgs.mkShell {
 			packages = (with pkgs; [
-				tmux-configured
+				tmuxc
 			]);
-            shellHook = ''
-                export TCONF="${pkgs.tmux-configured}"
-                alias tmux="tmux -f ${pkgs.tmux-configured}/tmux.conf"
-            '';
 		};
 	});
 }
